@@ -72,5 +72,9 @@
    string api_AccountStopoutLevel();
    string api_AccountStopoutMode();
    
+   string api_GetAccountInformation(string mode="json");
+   string api_GetAllOpenedOrders(string mode="json");
+   string api_GetAllOrderHistory(string mode="json");
+   
 #import
 //+------------------------------------------------------------------+

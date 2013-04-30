@@ -474,6 +474,49 @@ bool test_api_AccountStopoutMode ( ) {
    Print( "test_api_AccountStopoutMode: passed ", passed, " from ", passed+failed);
 }
 
+bool test_api_GetAccountInformation ( ) {
+
+   int passed = 0;
+   int failed = 0;
+
+   string result = "";
+   
+   result = api_GetAccountInformation("json");   
+   
+   Print( result );
+   
+   if ( assert( "{" == StringSubstr(result,0,1), "FAILED case1", "SUCCESS" ) == true ) {
+      passed ++;
+   } else {
+      failed ++;
+   }  
+   
+   Print( "test_api_GetAccountInformation: passed ", passed, " from ", passed+failed);
+}
+
+bool test_api_GetAllOpenedOrders ( ) {
+
+   int passed = 0;
+   int failed = 0;
+
+   string result = "";
+   
+   result = api_GetAllOpenedOrders("json");   
+   
+   int handle = FileOpen("test_api\\test.json", FILE_WRITE);
+   FileWrite( handle, result );
+   FileClose( handle );
+   
+   
+   if ( assert( "{" == StringSubstr(result,0,1), "FAILED case1", "SUCCESS" ) == true ) {
+      passed ++;
+   } else {
+      failed ++;
+   }  
+   
+   Print( "test_api_GetAllOpenedOrders: passed ", passed, " from ", passed+failed);
+}
+
 //+------------------------------------------------------------------+
 //| script program start function                                    |
 //+------------------------------------------------------------------+
@@ -501,6 +544,10 @@ int start()
    test_api_AccountServer();
    test_api_AccountStopoutLevel();
    test_api_AccountStopoutMode();
+   
+   test_api_GetAccountInformation();
+   
+   test_api_GetAllOpenedOrders();
    
    
 //----

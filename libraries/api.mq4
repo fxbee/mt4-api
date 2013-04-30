@@ -263,3 +263,126 @@ string api_AccountStopoutMode(){
    return (api_serialize(str_result));
 }
 
+string api_json_string_key_value( string key, string value ) {
+   return (StringConcatenate( "\"", key, "\"" , " : ", "\"", value , "\"" ));
+}
+
+string api_json_double_key_value( string key, double value ) {
+   return (StringConcatenate( "\"", key, "\"" , " : ", DoubleToStr( value, 5) ));
+}
+
+string api_json_integer_key_value( string key, int value ) {
+   return (StringConcatenate( "\"", key, "\"" , " : ", value) );
+}
+
+string api_GetAccountInformation(string mode="json") {
+
+   string result = "";
+
+   if ( mode == "json" ) {     
+         result = StringConcatenate(result, "{");   
+         result = StringConcatenate(result, api_json_integer_key_value("timestamp", TimeCurrent() ) );   
+         result = StringConcatenate(result, ", ", api_json_double_key_value("balance", AccountBalance() ) );   
+         result = StringConcatenate(result, ", ", api_json_double_key_value("credit", AccountCredit() ) );
+         result = StringConcatenate(result, ", ", api_json_string_key_value("company", AccountCompany() ) );
+         result = StringConcatenate(result, ", ", api_json_string_key_value("currency", AccountCurrency() ) );
+         result = StringConcatenate(result, ", ", api_json_double_key_value("equity", AccountEquity() ) );
+         result = StringConcatenate(result, ", ", api_json_double_key_value("free_margin", AccountFreeMargin() ) );
+         result = StringConcatenate(result, ", ", api_json_double_key_value("free_margin_mode", AccountFreeMarginMode() ) );
+         result = StringConcatenate(result, ", ", api_json_integer_key_value("leverage", AccountLeverage() ) );
+         result = StringConcatenate(result, ", ", api_json_double_key_value("margin", AccountMargin() ) );
+         result = StringConcatenate(result, ", ", api_json_string_key_value("name", AccountName() ) );
+         result = StringConcatenate(result, ", ", api_json_integer_key_value("number", AccountNumber() ) );
+         result = StringConcatenate(result, ", ", api_json_double_key_value("profit", AccountProfit() ) );
+         result = StringConcatenate(result, ", ", api_json_string_key_value("server", AccountServer() ) );
+         result = StringConcatenate(result, ", ", api_json_integer_key_value("stopout_level", AccountStopoutLevel() ) );
+         result = StringConcatenate(result, ", ", api_json_integer_key_value("stopout_mode", AccountStopoutMode() ) );
+         result = StringConcatenate(result, "}");   
+   } else {
+      result = "{}";
+      Print( "ERROR: Unsupported mode, only JSON serialization is supported" );
+   }
+
+   return (result);   
+}
+
+string api_getOrderTypeCodeAsString(int code) {
+
+   switch (code) {
+      case OP_BUY:
+         return ("BUY");
+      case OP_SELL:
+         return ("SELL");
+      case OP_BUYLIMIT:
+         return ("BUYLIMIT");         
+      case OP_BUYSTOP:
+         return ("BUYSTOP");
+      case OP_SELLLIMIT:
+         return ("SELLLIMIT");
+      case OP_SELLSTOP:
+         return ("SELLSTOP");
+   }
+
+}
+
+
+string api_GetAllOpenedOrders(string mode="json") {
+
+   string result = "";
+
+   if ( mode == "json" ) {     
+         result = StringConcatenate(result, "{");   
+         result = StringConcatenate(result, api_json_integer_key_value("timestamp", TimeCurrent() ) );   
+
+         string order_collection = "collection : [";
+         
+         int collection_size = 0;
+         
+         int total=OrdersTotal();  
+         for(int pos=0; pos < total; pos++ ){
+            if(OrderSelect(pos,SELECT_BY_POS)==false) continue;
+            
+            string json_str = "";
+         
+            if ( collection_size > 0 ) {
+               json_str = StringConcatenate(json_str, ",");                     
+            }
+
+            json_str = StringConcatenate(json_str, "{");               
+            json_str = StringConcatenate(json_str, api_json_string_key_value("comment", OrderComment() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("commision", OrderCommission() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_integer_key_value("expiration", OrderExpiration() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_integer_key_value("magic_number", OrderMagicNumber() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("lots", OrderLots() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("open_price", OrderOpenPrice() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_integer_key_value("open_time", OrderOpenTime() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("profit", OrderProfit() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("stop_loss", OrderStopLoss() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_string_key_value("symbol", OrderSymbol() ) );            
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("swap", OrderSwap() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_double_key_value("take_profit", OrderTakeProfit() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_integer_key_value("ticket", OrderTicket() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_integer_key_value("type", OrderType() ) );
+            json_str = StringConcatenate(json_str, ", ", api_json_string_key_value("type_code", api_getOrderTypeCodeAsString(OrderType()) ) );
+            json_str = StringConcatenate(json_str, "}");   
+            
+            order_collection = StringConcatenate(order_collection, json_str);
+            
+            collection_size ++;
+            
+         }
+         
+         order_collection = StringConcatenate(order_collection, "]");
+         
+         result = StringConcatenate(result, ", ", order_collection);   
+         
+         result = StringConcatenate(result, "}");   
+   } else {
+      result = "{}";
+      Print( "ERROR: Unsupported mode, only JSON serialization is supported" );
+   }
+
+   return (result);   
+
+}
+
