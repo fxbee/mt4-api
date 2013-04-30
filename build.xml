@@ -12,7 +12,28 @@ On Windows you can use great instalator provided on URL
  -->
 <project name="MT4" default="build">
   
-  <target name="copy">
+  <target name="install_to_mt">
+  	
+	  	<copy todir="${dest}experts/include" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/include/">
+		    <include name="api.mqh"/>		    
+		  </fileset>
+		</copy>
+		
+		<copy todir="${dest}/experts/libraries" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/libraries/">
+		    <include name="api.mq4"/>		    
+		  </fileset>
+		</copy>
+		
+		<copy todir="${dest}/experts/scripts" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/scripts/">
+		    <include name="test_api.mq4"/>		    
+		  </fileset>
+		</copy>
+  </target>
+  
+  <target name="copy_from_mt">
 
 		<copy todir="${dest}/include" verbose="true" overwrite="${copy.overwrite}">
 		  <fileset dir="${source}/experts/include/">
