@@ -51,7 +51,26 @@
 //| EX4 imports                                                      |
 //+------------------------------------------------------------------+
 #import "api.ex4"
-   int parse_serialized_string_array(string serialized, string& result_data[], string separator="|");
-   int return123();
+
+   int    api_unserialize(string serialized, string& result_data[], string separator="|");
+   string api_serialize(string array[]);   
+   
+   string api_AccountBalance();
+   string api_AccountCredit();
+   string api_AccountCompany(); 
+   string api_AccountCurrency();
+   string api_AccountEquity();
+   string api_AccountFreeMargin();
+   string api_AccountFreeMarginCheck(string symbol, int cmd, double volume);
+   string api_AccountFreeMarginMode();
+   string api_AccountLeverage();
+   string api_AccountMargin();
+   string api_AccountName();
+   string api_AccountNumber();
+   string api_AccountProfit();
+   string api_AccountServer();
+   string api_AccountStopoutLevel();
+   string api_AccountStopoutMode();
+   
 #import
 //+------------------------------------------------------------------+

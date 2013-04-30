@@ -33,6 +33,10 @@
 
 #property library
 
+#include <stderror.mqh>
+
+#define API_SERIALIZE_SEPARATOR "|"
+
 //+------------------------------------------------------------------+
 //| parse_serialized_string_array parses serialized string           |
 //| it splits string by separator char, serialized string has to be  |
@@ -43,7 +47,7 @@
 //|       {VALUE} is string value                                    |
 //+------------------------------------------------------------------+
 
-int parse_serialized_string_array(string serialized, string& result_data[], string separator="|") {
+int api_unserialize(string serialized, string& result_data[], string separator="|") {
 
    int      n              = 0;   
    int      first_sep      = StringFind( serialized, separator, 0);
@@ -69,4 +73,193 @@ int parse_serialized_string_array(string serialized, string& result_data[], stri
       }         
    }
 }
+
+string api_serialize(string array[]) {
+
+   string result = "";
+   
+   if ( ArraySize(array) > 0 ) {
+      result = ArraySize(array);
+ 
+      for( int i=0; i<ArraySize(array); i++) {
+         result = StringConcatenate(result, API_SERIALIZE_SEPARATOR, array[i]);
+      }
+   }  
+
+   return (result);   
+}
+
 //+------------------------------------------------------------------+
+//| Account Information                                              |
+//|                                                                  |
+//| http://docs.mql4.com/account                                     |
+//+------------------------------------------------------------------+
+
+string api_AccountBalance() {
+
+   double result = AccountBalance();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountCredit(){
+
+   double result = AccountCredit();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountCompany(){
+
+   string result = AccountCompany();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+ 
+string api_AccountCurrency(){
+
+   string result = AccountCurrency();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountEquity(){
+
+   double result = AccountEquity();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountFreeMargin(){
+
+   double result = AccountFreeMargin();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountFreeMarginCheck(string symbol, int cmd, double volume) {
+
+   double result = AccountFreeMarginCheck(symbol, cmd, volume);
+   string str_result[3];
+
+   if ( result <= 0 || GetLastError() == ERR_NOT_ENOUGH_MONEY ) {
+      str_result[0] = 0.0;
+      str_result[1] = "ERR_NOT_ENOUGH_MONEY";
+      str_result[2] = ERR_NOT_ENOUGH_MONEY;
+   } else {   
+      str_result[0] = DoubleToStr(result, 5);
+      str_result[1] = "ERR_NO_ERROR";
+      str_result[2] = ERR_NO_ERROR;  
+   }
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountFreeMarginMode(){
+
+   double result = AccountFreeMarginMode();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountLeverage(){
+
+   int result = AccountLeverage();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountMargin(){
+
+   double result = AccountMargin();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountName(){
+
+   string result = AccountName();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountNumber(){
+
+   int result = AccountNumber();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountProfit(){
+
+   double result = AccountProfit();
+   string str_result[1];
+   
+   str_result[0] = DoubleToStr(result, 5);
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountServer(){
+
+   string result = AccountServer();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountStopoutLevel(){
+
+   int result = AccountStopoutLevel();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
+string api_AccountStopoutMode(){
+
+   double result = AccountStopoutMode();
+   string str_result[1];
+   
+   str_result[0] = result;
+   
+   return (api_serialize(str_result));
+}
+
