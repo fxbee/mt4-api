@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+http://ant.apache.org
+
+ANT BUILD SCRIPT
+
+On Linux just install ant package trough your favorite package manager.
+
+On Windows you can use great instalator provided on URL
+  http://code.google.com/p/winant/downloads/list
+
+ -->
+<project name="MT4" default="build">
+  
+  <target name="copy">
+
+		<copy todir="${dest}/include" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/experts/include/">
+		    <include name="api.mqh"/>		    
+		  </fileset>
+		</copy>
+		
+		<copy todir="${dest}/libraries" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/experts/libraries/">
+		    <include name="api.mq4"/>		    
+		  </fileset>
+		</copy>
+		
+		<copy todir="${dest}/scripts" verbose="true" overwrite="${copy.overwrite}">
+		  <fileset dir="${source}/experts/scripts/">
+		    <include name="test_api.mq4"/>		    
+		  </fileset>
+		</copy>
+		
+  </target>
+  
+</project>
